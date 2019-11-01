@@ -2,9 +2,8 @@
 
 conf_file=/root/upstream.conf
 
-blue=172.26.209.103
-green=172.26.154.109
-three=192.168.1.20
+blue=172.26.1.103
+green=172.26.1.109
 
 
 function uncomment () {
@@ -24,8 +23,7 @@ case $1 in
     uncomment
     comment_node $green
     ;;
-    "three")
+    "all")
     uncomment
-    comment_node $three
     ;;
 esac
