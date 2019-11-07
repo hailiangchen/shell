@@ -1,0 +1,42 @@
+input {
+    syslog {
+    	type => "network-syslog"
+	port => 514
+    }
+    syslog {
+    	type => "nginx-api-log"
+	port => 515
+    }
+}
+
+filter {
+    if [type] == "network-syslog" {
+	syslog_pri {}
+    }
+    if [type] == "nginx-api-log" {
+        grok {
+   	   match => {
+	    	"message" => "%{IPORHOST:clientip} - %{HTTPDUSER:identity} (?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})  %{NUMBER:status} (?:%{NUMBER:bytes}|-) %{WORD:agent} (?:%{NUMBER:time:float}|-) (?:%{NUMBER:utime:float}|-)"
+	   }
+	}
+        #remove_field => [ "message" ]
+    }
+}
+
+output {
+    #stdout { codec => rubydebug }
+
+    if [type] == "network-syslog" {
+        elasticsearch { 
+    	    hosts => ["localhost:9200"] 
+    	    index => "logstash-syslog"
+        }
+    }
+    if [type] == "nginx-api-log" {
+    	#elasticsearch { 
+    	#    hosts => ["localhost:9200"] 
+    	#    index => "logstash-nginx-api-%{+YYYY-MM-dd}"
+    	#}
+	stdout{}
+    }
+}
