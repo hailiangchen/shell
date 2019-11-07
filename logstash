@@ -16,7 +16,7 @@ filter {
     if [type] == "nginx-api-log" {
         grok {
    	   match => {
-	    	"message" => "%{IPORHOST:clientip} - %{HTTPDUSER:identity} (?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})  %{NUMBER:status} (?:%{NUMBER:bytes}|-) %{WORD:agent} (?:%{NUMBER:time:float}|-) (?:%{NUMBER:utime:float}|-)"
+	    	"message" => "%{IPORHOST:clientip} - %{USER:identity} (?:%{WORD:verb} %{NOTSPACE:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:rawrequest})  %{NUMBER:status} (?:%{NUMBER:bytes}|-) %{WORD:agent} (?:%{NUMBER:time:float}|-) (?:%{NUMBER:utime:float}|-)"
 	   }
 	}
         #remove_field => [ "message" ]
